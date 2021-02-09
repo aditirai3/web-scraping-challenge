@@ -33,27 +33,30 @@ def scrape():
     image_url = "https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/image/featured/mars1.jpg"
     browser.visit(featured_image_url)
 
+    time.sleep(1)
+
     # Scrape the image into Soup
     img_html = browser.html
-    img_soup = BeautifulSoup(img_html, 'html.parser')
+    img_soup = bs(img_html, 'html.parser')
         
-    mars_img = img_soup.find_all('img')
-    mars_img_path = mars_img.get('src')
-    featured_image_url = image_url +  mars_img_path
+    for link in img_soup.find_all('img'):
+        featured_image_url = link.get('src')
+
     print(featured_image_url)
 
     
     # Visit the Mars Facts site
     marsfacts = 'https://space-facts.com/mars/'
 
-    # Read html and convert to dataframe
+    # # use read_html to scrape out tables and select the relevant table 
+    # convert to dataframe
     facts_table = pd.read_html(marsfacts)
     df = facts_table[0]
     df.columns = ['facts', 'value']
     df.set_index('facts', inplace=True)
     df
 
-    # Convert the data to an HTML table string
+    # Convert the dataframe to an HTML table string
     facts_html = df.to_html()
     facts_html = facts_html.replace('\n', '')
     facts_html
@@ -64,10 +67,10 @@ def scrape():
 
     # Scrape page into Soup
     usgs_html = browser.html
-    usgs_soup = BeautifulSoup(usgs_html, 'html.parser')
+    usgs_soup = bs(usgs_html, 'html.parser')
 
     # Inspect and find relevant tags
-    usgs_all = soup_usgs_mars.find_all('div', class_='item')
+    usgs_all = usgs_soup.find_all('div', class_='item')
     usgs = 'https://astrogeology.usgs.gov'
 
 
