@@ -27,11 +27,20 @@ def scrape():
     # Get news para
     news_para = soup.find('div', class_='article_teaser_body').text
 
-    # Get the max avg temp
-    max_temp = avg_temps.find_all('strong')[1].text
+    
+    # Visit the JPL url to get the image
+    image_url = "https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html"
+    browser.visit(image_url)
 
-    # BONUS: Find the src for the sloth image
-    relative_image_path = soup.find_all('img')[2]["src"]
+    # Scrape the image into Soup
+    img_html = browser.html
+    img_soup = BeautifulSoup(img_html, 'html.parser')
+    
+    # Click FULL IMAGE link
+    browser.click_link_by_partial_text('FULL IMAGE')
+    
+    featured_image_url = "https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/image/featured/mars2.jpg"
+    soup.find_all('img')[2]["src"]
     sloth_img = url + relative_image_path
 
     # Store data in a dictionary
