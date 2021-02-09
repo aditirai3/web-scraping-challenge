@@ -7,6 +7,7 @@ def init_browser():
     executable_path = {"executable_path": "/usr/local/bin/chromedriver"}
     return Browser("chrome", **executable_path, headless=False)
 
+mars_data = {}
 
 def scrape():
     browser = init_browser()
@@ -58,26 +59,56 @@ def scrape():
     facts_html
 
     # Visit the Mars Hemispheres site
-        usgs_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
-        browser.visit(usgs_url)
+    usgs_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+    browser.visit(usgs_url)
 
-        # Scrape page into Soup
-        html_usgs_mars = browser.html
-        soup_usgs_mars = BeautifulSoup(html_usgs_mars, 'html.parser')
+    # Scrape page into Soup
+    usgs_html = browser.html
+    usgs_soup = BeautifulSoup(usgs_html, 'html.parser')
 
-        # Get all Mars Hemisphere image attributes
-        mars_all_items = soup_usgs_mars.find_all('div', class_='item')
-        url_usgs = 'https://astrogeology.usgs.gov'
+    # Inspect and find relevant tags
+    usgs_all = soup_usgs_mars.find_all('div', class_='item')
+    usgs = 'https://astrogeology.usgs.gov'
 
-    # Store data in a dictionary
-    costa_data = {
-        "sloth_img": sloth_img,
-        "min_temp": min_temp,
-        "max_temp": max_temp
-    }
+
+    # Define an empty list to hold the urls
+    hemisphere_urls = []
+
+    # Run a loop 
+    for x in usgs_all:
+        # Get the title of the hemisphere image
+        title = item.find('h3').text
+            
+        # Get the path of hemisphere image
+        img_path = x.find('a',class_='itemLink product-item')['href']
+            
+        #Visit the image url
+        browser.visit(usgs + img_path)
+            
+        # Scrape the page
+        usgs_html_path = browser.html
+        usgs_soup_html = BeautifulSoup(usgs_html_path, 'html.parser')
+            
+        # Get the full image url
+        img_tag = usgs_soup_html.find('div', class_ = 'downloads')
+        hem_img_url = img_tag.find('a')['href']
+            
+        #Append the dictionary with the image url string and the hemisphere title
+        hemisphere_urls.append({'title': title, 'img_url': hem_img_url})
+        
+    # Display the Mars Hemisphere image url list
+    print(hemisphere_urls)
+        
+    # Append all data 
+    mars_data['news_title'] = news_title
+    mars_data['news_p'] = news_para
+    mars_data['featured_image_url'] = featured_image_url
+    mars_data['facts'] = facts_html
+    mars_data['hemisphere_urls'] = hemisphere_urls
+
+    # Return results
+        return mars_data
+
 
     # Close the browser after scraping
     browser.quit()
-
-    # Return results
-    return costa_data

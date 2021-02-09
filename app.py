@@ -6,7 +6,7 @@ import scrape_nasa
 app = Flask(__name__)
 
 # Use PyMongo to establish Mongo connection
-mongo = PyMongo(app, uri="mongodb://localhost:27017/weather_app")
+mongo = PyMongo(app, uri="mongodb://localhost:27017/nasa_app")
 
 
 # Route to render index.html template using data from Mongo
