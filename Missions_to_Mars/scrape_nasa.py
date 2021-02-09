@@ -107,7 +107,7 @@ def scrape():
     mars_data['hemisphere_urls'] = hemisphere_urls
 
     # Return results
-        return mars_data
+    return mars_data
 
 
     # Close the browser after scraping
