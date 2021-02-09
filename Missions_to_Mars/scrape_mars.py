@@ -80,7 +80,7 @@ def scrape():
     # Run a loop 
     for x in usgs_all:
         # Get the title of the hemisphere image
-        title = item.find('h3').text
+        title = x.find('h3').text
             
         # Get the path of hemisphere image
         img_path = x.find('a',class_='itemLink product-item')['href']
