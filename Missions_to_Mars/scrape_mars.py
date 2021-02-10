@@ -1,6 +1,7 @@
 from splinter import Browser
 from bs4 import BeautifulSoup as bs
 import time
+import pandas as pd
 
 
 def init_browser():
@@ -31,7 +32,7 @@ def scrape():
     
     # Visit the JPL url to get the image
     image_url = "https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/image/featured/mars1.jpg"
-    browser.visit(featured_image_url)
+    browser.visit(image_url)
 
     time.sleep(1)
 
@@ -90,7 +91,7 @@ def scrape():
             
         # Scrape the page
         usgs_html_path = browser.html
-        usgs_soup_html = BeautifulSoup(usgs_html_path, 'html.parser')
+        usgs_soup_html = bs(usgs_html_path, 'html.parser')
             
         # Get the full image url
         img_tag = usgs_soup_html.find('div', class_ = 'downloads')
@@ -104,7 +105,7 @@ def scrape():
         
     # Append all data 
     mars_data['news_title'] = news_title
-    mars_data['news_p'] = news_para
+    mars_data['news_para'] = news_para
     mars_data['featured_image_url'] = featured_image_url
     mars_data['facts'] = facts_html
     mars_data['hemisphere_urls'] = hemisphere_urls
