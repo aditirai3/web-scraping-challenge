@@ -24,7 +24,8 @@ def scrape():
     soup = bs(html, "html.parser")
 
     # Get the news title (inspected the webpage)
-    news_title = soup.find('div', class_='content_title').text
+    result = soup.find_all('div', class_='content_title')
+    news_title = result[1].text
 
     # Get news para
     news_para = soup.find('div', class_='article_teaser_body').text
